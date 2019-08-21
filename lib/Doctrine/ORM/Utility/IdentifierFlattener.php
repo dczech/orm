@@ -88,6 +88,16 @@ final class IdentifierFlattener
                 $associatedId = [];
 
                 foreach ($class->associationMappings[$field]['joinColumns'] as $joinColumn) {
+                    if (!isset($id[$joinColumn['name']])) {
+                        @trigger_error(sprintf(
+                            'Doctrine identifier flattener -> column "%s" not found taken from field "%s"',
+                            $joinColumn['name'],
+                            $field
+                        ), E_USER_WARNING);
+                        $associatedId[] = $id[$field];
+                        break;
+                    }
+
                     $associatedId[] = $id[$joinColumn['name']];
                 }
 
